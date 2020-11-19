@@ -48,6 +48,16 @@ function VideoUploadPage() {
 		const response = await Axios.post('/api/video/uploadFiles', formData, config)
 		if (response.status === 200) {
 			console.log(response.data)
+			let variable = {
+				url: response.data.url,
+				fileName: response.data.fileName,
+			}
+			const { data } = await Axios.post('/api/video/thumbnail', variable)
+			if (data.success) {
+				console.log(data)
+			} else {
+				alert('썸네일 생성에 실패했습니다.')
+			}
 		} else {
 			alert('비디오 업로드를 실패했습니다.')
 		}
