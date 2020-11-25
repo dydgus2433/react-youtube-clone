@@ -31,6 +31,7 @@ function VideoDetailPage(props) {
 	}, [videoId])
 
 	const refreshFunction = (newComment) => {
+		console.log('newComment', newComment)
 		setComments(Comments.concat(newComment))
 	}
 

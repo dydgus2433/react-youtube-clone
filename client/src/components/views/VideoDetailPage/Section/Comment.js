@@ -1,9 +1,10 @@
 import { Button } from 'antd'
 import TextArea from 'antd/lib/input/TextArea'
 import Axios from 'axios'
-import React, { useState } from 'react'
+import React, { Fragment, useState } from 'react'
 import { useSelector } from 'react-redux'
 import SingleComment from './SingleComment'
+import ReplyComment from './ReplyComment'
 function Comment(props) {
 	const user = useSelector((state) => state.user)
 	const videoId = props.videoId
@@ -26,7 +27,7 @@ function Comment(props) {
 			if (response.data.success) {
 				console.log(response.data.success)
 
-				props.refreshFunction(response.data.reuslt)
+				props.refreshFunction(response.data.result)
 			} else {
 				alert('커맨드를 저장하지 못했습니다')
 			}
@@ -41,12 +42,20 @@ function Comment(props) {
 			{props.commentLists &&
 				props.commentLists.map(
 					(comment, index) =>
-						!comment['responseTo'] && (
-							<SingleComment
-								refreshFunction={props.refreshFunction}
-								videoId={props.videoId}
-								comment={comment}
-							/>
+						!comment.responseTo && (
+							<Fragment>
+								<SingleComment
+									refreshFunction={props.refreshFunction}
+									videoId={props.videoId}
+									comment={comment}
+								/>
+								<ReplyComment
+									refreshFunction={props.refreshFunction}
+									parentCommentId={comment._id}
+									videoId={props.videoId}
+									commentLists={props.commentLists}
+								/>
+							</Fragment>
 						),
 				)}
 

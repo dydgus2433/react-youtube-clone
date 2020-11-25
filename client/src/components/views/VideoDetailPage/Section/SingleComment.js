@@ -30,7 +30,8 @@ function SingleComment(props) {
 		Axios.post('/api/comment/saveComment', variables).then((response) => {
 			if (response.data.success) {
 				console.log(response.data.success)
-				props.refreshFunction(response.data.reuslt)
+				props.refreshFunction(response.data.result)
+				setOpenReply(false)
 			} else {
 				alert('커맨드를 저장하지 못했습니다')
 			}

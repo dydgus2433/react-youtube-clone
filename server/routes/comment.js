@@ -18,11 +18,13 @@ router.post('/saveComment', (req, res) => {
 })
 
 router.post('/getComments', (req, res) => {
+	console.log('req.body.videoId ', req.body.videoId)
 	Comment.find({ videoId: req.body.videoId })
 		.populate('writer')
 		.exec((err, comments) => {
 			if (err) return res.status(400).send(err)
-			res.status(200).send({ success: true, comments })
+			console.log('comments', comments)
+			res.status(200).send({ success: true, comments: comments })
 		})
 })
 module.exports = router
