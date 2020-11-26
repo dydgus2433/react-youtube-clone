@@ -30,7 +30,7 @@ function LikeDislikes(props) {
 			}
 		})
 
-		Axios.get('/api/like/getDisLikes', variable).then((response) => {
+		Axios.get('/api/like/getDislikes', variable).then((response) => {
 			if (response.data.success) {
 				//얼마나 많은 싫어요를 받았는지
 				setDislikes(response.data.dislikes.length)
@@ -51,11 +51,57 @@ function LikeDislikes(props) {
 			Axios.post('/api/like/upLike', variable)
 				.then((result) => {
 					if (result.data.success) {
+						setLikes(Likes + 1)
+						setLikeAction('liked')
+
+						if (DislikeAction !== null) {
+							setDislikeAction(null)
+							setDislikes(Dislikes - 1)
+						}
 					} else {
 						alert('Like를 올리지 못하였습니다.')
 					}
 				})
 				.catch((err) => {})
+		} else {
+			Axios.post('/api/like/unLike', variable)
+				.then((result) => {
+					if (result.data.success) {
+						setLikes(Likes - 1)
+						setLikeAction(null)
+					} else {
+						alert('Like를 내리지 못하였습니다.')
+					}
+				})
+				.catch((err) => {})
+		}
+	}
+
+	const onDislike = () => {
+		if (DislikeAction !== null) {
+			Axios.post('/api/like/unDislike', variable)
+				.then((response) => {
+					if (response.data.success) {
+						setDislikes(Dislikes - 1)
+						setDislikeAction(null)
+					} else {
+						alert('dislike를 지우지 못했습니다.')
+					}
+				})
+				.catch((err) => {})
+		} else {
+			Axios.post('/api/like/upDislike', variable).then((response) => {
+				if (response.data.success) {
+					setDislikes(Dislikes + 1)
+					setDislikeAction('disliked')
+					if (LikeAction !== null) {
+						setLikeAction(null)
+						setLikes(Likes - 1)
+					}
+				} else {
+					alert('dislike를 지우지 못했습니다.')
+				}
+			})
 		}
 	}
 	return (
@@ -71,11 +117,11 @@ function LikeDislikes(props) {
 				<span style={{ paddingLeft: '8px', cursor: 'auto' }}>{Likes}</span>
 			</span>
 			<span key="comment-basic-dislike">
-				<Tooltip title="DisLike">
+				<Tooltip title="Dislike">
 					<Icon
 						type="dislike"
 						theme={DislikeAction === 'disliked' ? 'filled' : 'outlined'}
-						onClick={onLike}
+						onClick={onDislike}
 					/>
 				</Tooltip>
 				<span style={{ paddingLeft: '8px', cursor: 'auto' }}>{Dislikes}</span>
